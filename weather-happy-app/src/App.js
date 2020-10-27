@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Component, useState } from 'react';
 
 const api = {
   key: 'd3c5928599c5c22e8bc6dd88ca81706d',
@@ -6,12 +6,21 @@ const api = {
 }
 
 function App() {
+  /*componentDidMount() {
+    this.getPosition()
+    .then((position) => {
+       this.getWeather(position.coords.latitude,     
+       position.coords.longitude)
+     })
+     .catch((err) => console.log(err.message));
+ }*/
+
   const [query, setQuery] = useState('');
   const [weather, setWeather] = useState({});
 
   const search = evt => {
     if (evt.key === "Enter"){
-      fetch(`${api.base}weather?q=${query}&units=metric&APPID=${api.key}`)
+      fetch(`${api.base}weather?q=${query}&units=metric&APPID=${api.key}&lang=pt_br`)
       .then(res => res.json())
       .then(result => {
         setQuery('');
@@ -30,7 +39,7 @@ function App() {
     let month = months[d.getMonth()];
     let year = d.getFullYear();
 
-    return `${day} ${date} ${month} ${year}`
+    return `${day}, ${date} de ${month} de ${year}`
   };
 
   return (
@@ -68,7 +77,9 @@ function App() {
             <div className='temp'>
               {Math.round(weather.main.temp)}°c
             </div>
-            <div className='weather'>{weather.weather[0].main}</div>
+            <div className='weather'>
+              {weather.weather[0].description.charAt(0).toUpperCase() + weather.weather[0].description.slice(1)}
+            </div>
           </div>
         </div>
       ) : ('')}
