@@ -12,7 +12,8 @@ class Dashboard extends React.Component{
             openWeatherKey: 'd3c5928599c5c22e8bc6dd88ca81706d',
             openWeatherAPI: 'api.openweathermap.org/data/2.5/',
             query: '',
-            weather: {}
+            weather: {},
+            lastOperation: {}
         };
     }   
     
@@ -30,7 +31,9 @@ class Dashboard extends React.Component{
         .then(result => {
             this.setState({
                 query: '',
-                weather: result
+                weather: result,
+                lastOperation: { type: 'byLocation' },
+                refreshing: false
             });
             console.log(result);
         });
@@ -38,21 +41,26 @@ class Dashboard extends React.Component{
 
     // Funcao utilizando a API do Open Weather com Query
     getWeatherByQuery = (evt) => {
-        if (evt.key === "Enter"){
+        if ((evt.key === "Enter") || (evt === "refresh" && evt.key === undefined)){
             fetch(`//${this.state.openWeatherAPI}weather?q=${this.state.query}&appid=${this.state.openWeatherKey}&units=metric&lang=pt_br`)
             .then(res => res.json())
             .then(result => {
                 this.setState({
+                    weather: result,
+                    lastOperation: { 
+                        type: 'byQuery',
+                        q: this.state.query // Salvando ultima query
+                    },
                     query: '',
-                    weather: result
+                    refreshing: false
                 });
+
                 console.log(result);
             });
         }
     }
 
-    // Funcao disparada logo apos o React montar o componente
-    componentDidMount(){
+    triggerPositionQuery = () =>{
         this.getBrowserPosition()
             .then((position) => {      
                 this.getWeatherByLocation(position.coords.latitude, position.coords.longitude)
@@ -60,6 +68,29 @@ class Dashboard extends React.Component{
         .catch((err) => {
             alert("Ops! Ocorreu um erro ao pesquisar a temperatura da sua localidade atual. Verifique se o seu navegador está habilitado.");
         });
+    }
+
+    refreshLastWeather = () =>{
+        if (this.state.lastOperation.type === "byLocation"){
+            this.setState({
+                refreshing: true
+            },() => {
+                this.triggerPositionQuery();
+            });            
+        }
+        else{
+            this.setState({
+                refreshing: true,
+                query: this.state.lastOperation.q // Recuperando Query antiga
+            },() => {
+                this.getWeatherByQuery("refresh");
+            });
+        }
+    }
+
+    // Funcao disparada logo apos o React montar o componente
+    componentDidMount(){
+        this.triggerPositionQuery();
     }
 
     // Renderizacao do Componente
@@ -80,7 +111,7 @@ class Dashboard extends React.Component{
                         <input 
                             type='text'
                             className='search-bar'
-                            placeholder='Pesquisar local...'
+                            placeholder='Digite um local e pressione "Enter"...'
                             onChange={e => this.setState({query: e.target.value})}
                             value={this.state.query}
                             onKeyPress={this.getWeatherByQuery}
@@ -89,7 +120,19 @@ class Dashboard extends React.Component{
 
                     {/* Function Componente: Weather Item */}
                     {( typeof this.state.weather.main != "undefined") ? (
-                        <WeatherItem data={this.state.weather}/>
+                        <div className='weather-item-container'>
+                            <WeatherItem data={this.state.weather}/>
+
+                            {/* Botão para atualizar temperatura de acordo com última query */}
+                            { (this.state.refreshing) ? <p className="refresh-p">Atualizando...</p> 
+                            :                             
+                            <button 
+                                onClick={this.refreshLastWeather}
+                                className='refresh-btn'
+                            >
+                                Atualizar
+                            </button>}                            
+                        </div>
                     ) : ('')}
                 </main>
             </div>
