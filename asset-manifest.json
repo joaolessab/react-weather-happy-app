@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/Weather-Happy--App/static/css/main.b275a598.chunk.css",
+    "main.js": "/Weather-Happy--App/static/js/main.87cb9077.chunk.js",
+    "main.js.map": "/Weather-Happy--App/static/js/main.87cb9077.chunk.js.map",
+    "runtime-main.js": "/Weather-Happy--App/static/js/runtime-main.6f2fc2ba.js",
+    "runtime-main.js.map": "/Weather-Happy--App/static/js/runtime-main.6f2fc2ba.js.map",
+    "static/js/2.d2255446.chunk.js": "/Weather-Happy--App/static/js/2.d2255446.chunk.js",
+    "static/js/2.d2255446.chunk.js.map": "/Weather-Happy--App/static/js/2.d2255446.chunk.js.map",
+    "index.html": "/Weather-Happy--App/index.html",
+    "static/css/main.b275a598.chunk.css.map": "/Weather-Happy--App/static/css/main.b275a598.chunk.css.map",
+    "static/js/2.d2255446.chunk.js.LICENSE.txt": "/Weather-Happy--App/static/js/2.d2255446.chunk.js.LICENSE.txt",
+    "static/media/dashboard.styles.scss": "/Weather-Happy--App/static/media/warm-bg.54b4aed6.jpg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.6f2fc2ba.js",
+    "static/js/2.d2255446.chunk.js",
+    "static/css/main.b275a598.chunk.css",
+    "static/js/main.87cb9077.chunk.js"
+  ]
+}
